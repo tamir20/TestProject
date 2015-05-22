@@ -36,7 +36,7 @@ import android.annotation.SuppressLint;
 import javax.net.ssl.HttpsURLConnection;
 
 public class RtcActivity extends Activity implements WebRtcClient.RtcListener {
-    private final String FIREBASE_URL = "https://dazzling-inferno-1709.firebaseio.com/";
+    private final String FIREBASE_URL = "https://torrid-heat-7030.firebaseio.com/";
     private final static int VIDEO_CALL_SENT = 666;
     private static final String VIDEO_CODEC_VP9 = "VP9";
     private static final String AUDIO_CODEC_OPUS = "opus";
