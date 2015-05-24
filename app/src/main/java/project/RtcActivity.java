@@ -66,6 +66,7 @@ public class RtcActivity extends Activity implements WebRtcClient.RtcListener {
     private Firebase mFirebaseRef;
     private String DATA;
     private int lock = 0;
+    private String robot_id = "";
 
 
     @Override
@@ -85,6 +86,7 @@ public class RtcActivity extends Activity implements WebRtcClient.RtcListener {
                         | LayoutParams.FLAG_SHOW_WHEN_LOCKED
                         | LayoutParams.FLAG_TURN_SCREEN_ON);
         setContentView(R.layout.main);
+        //this listener event is for determining 'host' value
         mFirebaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -92,6 +94,21 @@ public class RtcActivity extends Activity implements WebRtcClient.RtcListener {
                     host = snapshot.child("host_ip").getValue().toString();
                     mFirebaseRef.child("users/try").setValue(host);
                     lock = 2;
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+        //set the listener to handle "CONNECTION_ISSUE"
+        mFirebaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if(snapshot.child("users/robot_"+robot_id+"/robot_response").getValue().toString()=="CONNECTION_ISSUE") {
+                    mFirebaseRef.child("users/robot_" + robot_id + "/robot_response").setValue("CONNECTION_OK");
+                    setFirebase();
                 }
             }
 
@@ -200,7 +217,13 @@ public class RtcActivity extends Activity implements WebRtcClient.RtcListener {
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(RtcActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
         }*/
-        setFirebase(callId);
+
+        //setFirebase(callId); was originally here but we want the robot's id to be constant, so
+        // we determine its value to be the first call id
+        if(robot_id == ""){
+            robot_id = callId;
+        }
+        setFirebase();
         startCam();
     }
 
@@ -255,8 +278,11 @@ public class RtcActivity extends Activity implements WebRtcClient.RtcListener {
                 scalingType);
     }
 
-    public void setFirebase(String id) {
-        mFirebaseRef.child("users/robot_"+id+"/robot_response").setValue("CONNECTION_OK");
-        mFirebaseRef.child("users/robot_"+id+"/rtsp_stream_url").setValue(mSocketAddress + "/" +id);
+    public void setFirebase() {
+        //this line was commeted because first we have to check for "ISSUE_CONNECTION" value before
+        //we can answer "CONNECTION_OK"
+        //mFirebaseRef.child("users/robot_"+id+"/robot_response").setValue("CONNECTION_OK");
+
+        mFirebaseRef.child("users/robot_"+robot_id+"/rtsp_stream_url").setValue(mSocketAddress + "/" +robot_id);
     }
 }
