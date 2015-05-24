@@ -285,6 +285,8 @@ public class RtcActivity extends Activity implements WebRtcClient.RtcListener {
         //we can answer "CONNECTION_OK"
         //mFirebaseRef.child("users/robot_"+id+"/robot_response").setValue("CONNECTION_OK");
 
+        //the robot_id is not changing to ensure only 1 robot id until the end of the application.
+        //callID is changing every time a new call is created
         mFirebaseRef.child("users/robot_"+robot_id+"/rtsp_stream_url").setValue(mSocketAddress + "/" +callID);
     }
 }
