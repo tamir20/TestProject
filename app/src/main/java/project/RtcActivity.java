@@ -221,8 +221,10 @@ public class RtcActivity extends Activity implements WebRtcClient.RtcListener {
 
         //setFirebase(callId); was originally here but we want the robot's id to be constant, so
         // we determine its value to be the first call id
+        //here we want the robot is to be 123456 only, but i want to save the option to make it
+        //more general
         if(robot_id == ""){
-            robot_id = callId;
+            robot_id = "123456";// and not "callId"
         }
         callID = callId;
         setFirebase();
