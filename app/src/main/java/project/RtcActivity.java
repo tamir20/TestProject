@@ -67,6 +67,7 @@ public class RtcActivity extends Activity implements WebRtcClient.RtcListener {
     private String DATA;
     private int lock = 0;
     private String robot_id = "";
+    private String callID = "";
 
 
     @Override
@@ -223,6 +224,7 @@ public class RtcActivity extends Activity implements WebRtcClient.RtcListener {
         if(robot_id == ""){
             robot_id = callId;
         }
+        callID = callId;
         setFirebase();
         startCam();
     }
@@ -283,6 +285,6 @@ public class RtcActivity extends Activity implements WebRtcClient.RtcListener {
         //we can answer "CONNECTION_OK"
         //mFirebaseRef.child("users/robot_"+id+"/robot_response").setValue("CONNECTION_OK");
 
-        mFirebaseRef.child("users/robot_"+robot_id+"/rtsp_stream_url").setValue(mSocketAddress + "/" +robot_id);
+        mFirebaseRef.child("users/robot_"+robot_id+"/rtsp_stream_url").setValue(mSocketAddress + "/" +callID);
     }
 }
